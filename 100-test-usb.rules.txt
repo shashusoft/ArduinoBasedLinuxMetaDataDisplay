@@ -1,0 +1,2 @@
+SUBSYSTEMS=="usb", DRIVERS=="usb", ACTION=="add", RUN+="/home/atish/dev/arduino_ip/test.sh"
+

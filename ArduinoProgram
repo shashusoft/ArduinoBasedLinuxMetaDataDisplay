@@ -1,0 +1,58 @@
+int    incomingByte        = 0; // for incoming serial data
+String fromHost;
+String toCompare           = "Host\n";
+int    isHostConnected     = 0;
+int    ipHandshakeCounter  = 0;
+String ipAddress;
+int    isIpAddressReceived = 0;
+void setup() 
+{
+    Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
+}
+
+void loop() 
+{
+    // send data only when you receive data:
+    while(Serial.available()) 
+    {
+        if (isHostConnected == 1)
+        {
+            ipAddress = Serial.readString();
+            Serial.println(ipAddress);
+            isIpAddressReceived = true;
+        }
+        else
+        {
+            fromHost = Serial.readString();
+            Serial.println(fromHost);
+            if (fromHost.equals(toCompare))
+            {
+                isHostConnected = 1; 
+                Serial.println(isHostConnected); 
+            } 
+        }     
+    }
+    if (isHostConnected == 1)
+    {
+       if (isIpAddressReceived)
+       {
+            
+            Serial.println(ipAddress);
+       }
+       else
+       {
+           Serial.println("Send IP"); 
+           ipHandshakeCounter++;
+           if(ipHandshakeCounter == 10)
+           {
+               isHostConnected    = 0;    
+               ipHandshakeCounter = 0; 
+           }
+       }
+    }
+    else
+    {
+        Serial.println("Host not connected");
+    }
+    delay(1000);
+}
